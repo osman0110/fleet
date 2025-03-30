@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_fleet_tracking_device_form" model="ir.ui.view">
+        <field name="name">fleet.tracking.device.form</field>
+        <field name="model">fleet.tracking.device</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Device Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="identifier"/>
+                            <field name="traccar_uniqueid"/>
+                            <field name="device_model"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="category"/>
+                            <field name="status"/>
+                            <field name="last_update"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Last Position" attrs="{'invisible': [('last_position_id', '=', False)]}">
+                        <field name="last_position_id" invisible="1"/>
+                        <field name="last_position_id" nolabel="1" widget="map" options="{'popup_fields': ['timestamp', 'speed', 'altitude']}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Tree View -->
+    <record id="view_fleet_tracking_device_tree" model="ir.ui.view">
+        <field name="name">fleet.tracking.device.tree</field>
+        <field name="model">fleet.tracking.device</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="identifier"/>
+                <field name="vehicle_id"/>
+                <field name="device_model"/>
+                <field name="status"/>
+                <field name="last_update"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_fleet_tracking_device_search" model="ir.ui.view">
+        <field name="name">fleet.tracking.device.search</field>
+        <field name="model">fleet.tracking.device</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="identifier"/>
+                <field name="vehicle_id"/>
+                <filter string="Online" name="online" domain="[('status', '=', 'online')]"/>
+                <filter string="Offline" name="offline" domain="[('status', '=', 'offline')]"/>
+                <filter string="Assigned Devices" name="assigned" domain="[('vehicle_id', '!=', False)]"/>
+                <filter string="Unassigned Devices" name="unassigned" domain="[('vehicle_id', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle" name="group_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_fleet_tracking_device" model="ir.actions.act_window">
+        <field name="name">Tracking Devices</field>
+        <field name="res_model">fleet.tracking.device</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new tracking device
+            </p>
+            <p>
+                Tracking devices can be assigned to your vehicles to track their position in real-time.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menu -->
+    <menuitem id="menu_fleet_tracking"
+            name="Tracking"
+            parent="fleet.fleet_vehicles"
+            sequence="5"/>
+    
+    <menuitem id="menu_fleet_tracking_device"
+            name="Tracking Devices"
+            parent="menu_fleet_tracking"
+            action="action_fleet_tracking_device"
+            sequence="10"/>
+</odoo>

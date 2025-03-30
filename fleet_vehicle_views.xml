@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="fleet_vehicle_view_form_inherit_tracking" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.tracking</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_map" type="object" class="oe_stat_button" icon="fa-map-marker">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Location</span>
+                    </div>
+                </button>
+                <button name="action_view_position_history" type="object" class="oe_stat_button" icon="fa-history">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Position History</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Tracking" name="tracking">
+                    <group>
+                        <group string="Device Information">
+                            <field name="device_id"/>
+                            <field name="current_latitude"/>
+                            <field name="current_longitude"/>
+                        </group>
+                        <group string="Status">
+                            <field name="current_speed" widget="float_time"/>
+                            <field name="vehicle_status"/>
+                            <field name="last_position_update"/>
+                        </group>
+                    </group>
+                    <field name="position_history_ids" readonly="1">
+                        <tree>
+                            <field name="timestamp"/>
+                            <field name="latitude"/>
+                            <field name="longitude"/>
+                            <field name="speed"/>
+                            <field name="address"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Tree View for Map -->
+    <record id="fleet_vehicle_view_tree_map" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tree.map</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="driver_id"/>
+                <field name="current_latitude"/>
+                <field name="current_longitude"/>
+                <field name="current_speed"/>
+                <field name="vehicle_status"/>
+                <field name="last_position_update"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

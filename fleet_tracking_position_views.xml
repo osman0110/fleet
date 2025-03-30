@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_fleet_tracking_position_form" model="ir.ui.view">
+        <field name="name">fleet.tracking.position.form</field>
+        <field name="model">fleet.tracking.position</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="device_id"/>
+                            <field name="timestamp"/>
+                        </group>
+                        <group>
+                            <field name="latitude"/>
+                            <field name="longitude"/>
+                            <field name="altitude"/>
+                            <field name="speed"/>
+                            <field name="course"/>
+                        </group>
+                    </group>
+                    <group string="Location">
+                        <field name="address"/>
+                        <field name="attributes"/>
+                    </group>
+                    <div>
+                        <widget name="map" lat="latitude" lng="longitude" zoom="15" theme="light" popup_fields="['vehicle_id', 'timestamp', 'speed']"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Tree View -->
+    <record id="view_fleet_tracking_position_tree" model="ir.ui.view">
+        <field name="name">fleet.tracking.position.tree</field>
+        <field name="model">fleet.tracking.position</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="vehicle_id"/>
+                <field name="timestamp"/>
+                <field name="latitude"/>
+                <field name="longitude"/>
+                <field name="speed"/>
+                <field name="address"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_fleet_tracking_position_search" model="ir.ui.view">
+        <field name="name">fleet.tracking.position.search</field>
+        <field name="model">fleet.tracking.position</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="device_id"/>
+                <field name="address"/>
+                <filter string="Today" name="today" domain="[('timestamp', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 7 Days" name="last_7_days" domain="[('timestamp', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle" name="group_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Device" name="group_device" context="{'group_by': 'device_id'}"/>
+                    <filter string="Date" name="group_timestamp_day" context="{'group_by': 'timestamp:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_fleet_tracking_position" model="ir.actions.act_window">
+        <field name="name">Position History</field>
+        <field name="res_model">fleet.tracking.position</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No position data yet
+            </p>
+            <p>
+                Position data is automatically collected from your tracking devices.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menu -->
+    <menuitem id="menu_fleet_tracking_position"
+            name="Position History"
+            parent="menu_fleet_tracking"
+            action="action_fleet_tracking_position"
+            sequence="20"/>
+</odoo>
